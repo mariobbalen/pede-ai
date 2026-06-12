@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <a routerLink="/restaurants" class="brand">
+    <mat-icon>restaurant</mat-icon>
+    <span>PedeAí</span>
+  </a>
+
+  <span class="spacer"></span>
+
+  <button mat-button routerLink="/restaurants">Restaurantes</button>
+  <button mat-button routerLink="/my-orders">Meus pedidos</button>
+  <button mat-button routerLink="/restaurant-login">Área do restaurante</button>
+</mat-toolbar>
+
+<main class="page-content">
+  <router-outlet />
+</main>

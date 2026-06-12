@@ -1,0 +1,18 @@
+<h1>Área do restaurante</h1>
+<p>Selecione o restaurante que você gerencia:</p>
+
+@if (loading) {
+  <p>Carregando...</p>
+} @else if (restaurants.length === 0) {
+  <p>Nenhum restaurante disponível.</p>
+} @else {
+  <mat-nav-list>
+    @for (restaurant of restaurants; track restaurant.id) {
+      <a mat-list-item (click)="selectRestaurant(restaurant)">
+        <mat-icon matListItemIcon>storefront</mat-icon>
+        <span matListItemTitle>{{ restaurant.name }}</span>
+        <span matListItemLine>{{ restaurant.address }}</span>
+      </a>
+    }
+  </mat-nav-list>
+}

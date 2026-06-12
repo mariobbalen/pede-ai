@@ -1,0 +1,40 @@
+<div class="cart-summary">
+  @if (items.length === 0) {
+    <p class="empty">Seu carrinho está vazio.</p>
+  } @else {
+    <div class="line-items">
+      @for (item of items; track item.menu_item_id) {
+        <div class="line-item">
+          <div class="info">
+            <span class="name">{{ item.name }}</span>
+            <span class="unit-price">R$ {{ item.price }} cada</span>
+          </div>
+
+          @if (editable) {
+            <div class="quantity-controls">
+              <button mat-icon-button type="button" (click)="decrease.emit(item)" aria-label="Diminuir quantidade">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span class="quantity">{{ item.quantity }}</span>
+              <button mat-icon-button type="button" (click)="increase.emit(item)" aria-label="Aumentar quantidade">
+                <mat-icon>add</mat-icon>
+              </button>
+              <button mat-icon-button type="button" (click)="remove.emit(item)" aria-label="Remover item">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          } @else {
+            <span class="quantity">x{{ item.quantity }}</span>
+          }
+
+          <span class="line-total">R$ {{ lineTotal(item).toFixed(2) }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="total">
+      <span>Total</span>
+      <span>R$ {{ total.toFixed(2) }}</span>
+    </div>
+  }
+</div>

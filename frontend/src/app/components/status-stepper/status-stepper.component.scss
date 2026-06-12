@@ -1,0 +1,37 @@
+.status-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(0, 0, 0, 0.4);
+
+  .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+  }
+
+  &.done {
+    color: rgba(0, 0, 0, 0.7);
+
+    .dot {
+      background-color: #4caf50;
+    }
+  }
+
+  &.active {
+    color: #1976d2;
+    font-weight: 600;
+
+    .dot {
+      background-color: #1976d2;
+    }
+  }
+}

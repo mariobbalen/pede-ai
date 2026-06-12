@@ -1,0 +1,24 @@
+<h1>Restaurantes</h1>
+
+@if (loading) {
+  <p>Carregando restaurantes...</p>
+} @else if (restaurants.length === 0) {
+  <p>Nenhum restaurante disponível no momento.</p>
+} @else {
+  <div class="restaurant-grid">
+    @for (restaurant of restaurants; track restaurant.id) {
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ restaurant.name }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="description">{{ restaurant.description }}</p>
+          <p class="address">{{ restaurant.address }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <a mat-button color="primary" [routerLink]="['/restaurants', restaurant.id]">Ver cardápio</a>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+}

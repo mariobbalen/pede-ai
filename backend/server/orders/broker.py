@@ -25,7 +25,7 @@ def publish_order_created(order):
             "items": order.items,
             "address": order.address,
             "name": order.customer_name,
-            "restaurant": order.restaurant,
+            "restaurant": order.restaurant.name,
             "price": float(order.price) if order.price is not None else None,
             "status": order.status,
         }

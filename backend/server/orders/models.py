@@ -2,6 +2,8 @@ import uuid
 
 from django.db import models
 
+from restaurants.models import Restaurant
+
 
 class Order(models.Model):
     # Values must match the status strings published by broker/restaurant_consumer.py
@@ -29,10 +31,12 @@ class Order(models.Model):
     }
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.PROTECT, related_name="orders")
     items = models.JSONField()
     address = models.CharField(max_length=255)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     customer_name = models.CharField(max_length=255, blank=True, default="")
-    restaurant = models.CharField(max_length=255, blank=True, default="")
     price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     status = models.CharField(max_length=32, choices=STATUS_CHOICES, default="created")
     status_message = models.CharField(max_length=255, blank=True, default="")

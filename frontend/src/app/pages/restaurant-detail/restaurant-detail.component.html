@@ -1,0 +1,47 @@
+@if (loading) {
+  <p>Carregando cardápio...</p>
+} @else if (!restaurant) {
+  <p>Restaurante não encontrado.</p>
+} @else {
+  <h1>{{ restaurant.name }}</h1>
+  <p class="description">{{ restaurant.description }}</p>
+  <p class="address">{{ restaurant.address }}</p>
+
+  <div class="menu-list">
+    @for (item of restaurant.menu_items; track item.id) {
+      <mat-card class="menu-item" [class.unavailable]="!item.is_available">
+        <mat-card-content>
+          <div class="menu-item-info">
+            <span class="name">{{ item.name }}</span>
+            <span class="item-description">{{ item.description }}</span>
+            <span class="price">R$ {{ item.price }}</span>
+          </div>
+
+          @if (item.is_available) {
+            <div class="menu-item-actions">
+              <div class="quantity-controls">
+                <button mat-icon-button type="button" (click)="decreaseQuantity(item.id)" aria-label="Diminuir quantidade">
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <span class="quantity">{{ quantities[item.id] }}</span>
+                <button mat-icon-button type="button" (click)="increaseQuantity(item.id)" aria-label="Aumentar quantidade">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+              <button mat-flat-button color="primary" type="button" (click)="addToCart(item)">Adicionar</button>
+            </div>
+          } @else {
+            <span class="unavailable-label">Indisponível</span>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  @if ((cart$ | async)?.items?.length) {
+    <div class="cart-footer">
+      <app-cart-summary [items]="(cart$ | async)?.items ?? []" [total]="(total$ | async) ?? 0"></app-cart-summary>
+      <button mat-flat-button color="primary" type="button" (click)="goToCheckout()">Ir para checkout</button>
+    </div>
+  }
+}

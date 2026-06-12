@@ -1,0 +1,37 @@
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.status {
+  color: #1976d2;
+}
+
+.address {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9rem;
+}
+
+.items-list {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.price {
+  margin-bottom: 8px;
+}

@@ -15,7 +15,8 @@ STATUSES = [
 def process_order(ch, method, properties, body):
     order = json.loads(body)
     print(f"\nNovo pedido recebido: {order['order_id']}")
-    print(f"   Itens: {', '.join(order['items'])}")
+    items_text = ", ".join(f"{item['quantity']}x {item['name']}" for item in order['items'])
+    print(f"   Itens: {items_text}")
     print(f"   Endereco: {order['address']}")
 
     try:

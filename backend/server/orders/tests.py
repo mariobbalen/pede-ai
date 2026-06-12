@@ -1,5 +1,6 @@
 import json
 import uuid
+from decimal import Decimal
 from unittest.mock import MagicMock, patch
 
 import pika
@@ -7,6 +8,8 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+
+from restaurants.models import MenuItem, Restaurant
 
 from .management.commands.consume_status import Command
 from .models import Order
@@ -18,6 +21,14 @@ class BrokerMockMixin:
 
     def setUp(self):
         super().setUp()
+        self.restaurant = Restaurant.objects.create(name="Burguer House")
+        self.menu_item_burger = MenuItem.objects.create(
+            restaurant=self.restaurant, name="X-Burguer", price=Decimal("22.90")
+        )
+        self.menu_item_soda = MenuItem.objects.create(
+            restaurant=self.restaurant, name="Coca-Cola", price=Decimal("6.00")
+        )
+
         self.mock_channel = MagicMock()
         mock_connection = MagicMock()
         mock_connection.channel.return_value = self.mock_channel
@@ -29,15 +40,38 @@ class BrokerMockMixin:
         _, kwargs = self.mock_channel.basic_publish.call_args
         return kwargs["routing_key"], json.loads(kwargs["body"])
 
+    def make_order(self, **overrides):
+        defaults = dict(
+            restaurant=self.restaurant,
+            items=[
+                {
+                    "menu_item_id": str(self.menu_item_burger.id),
+                    "name": self.menu_item_burger.name,
+                    "price": str(self.menu_item_burger.price),
+                    "quantity": 1,
+                }
+            ],
+            address="Rua A, 1",
+            price=self.menu_item_burger.price,
+            status="created",
+            status_message=Order.STATUS_MESSAGES["created"],
+        )
+        defaults.update(overrides)
+        return Order.objects.create(**defaults)
+
 
 class OrderCreateTests(BrokerMockMixin, APITestCase):
     def test_create_order_publishes_to_broker(self):
         payload = {
-            "items": ["X-Burguer", "Coca-Cola"],
+            "restaurant": str(self.restaurant.id),
+            "items": [
+                {"menu_item_id": str(self.menu_item_burger.id), "quantity": 1},
+                {"menu_item_id": str(self.menu_item_soda.id), "quantity": 2},
+            ],
             "address": "Rua das Flores, 42",
+            "latitude": "-23.561414",
+            "longitude": "-46.655881",
             "customer_name": "Mario",
-            "restaurant": "McDonalds",
-            "price": "30.00",
         }
         response = self.client.post(reverse("order-list"), payload, format="json")
 
@@ -45,16 +79,19 @@ class OrderCreateTests(BrokerMockMixin, APITestCase):
         order = Order.objects.get(id=response.data["id"])
         self.assertEqual(order.status, "created")
         self.assertEqual(order.status_message, "Pedido recebido")
+        self.assertEqual(order.price, Decimal("34.90"))
+        self.assertEqual(order.items[0]["name"], "X-Burguer")
+        self.assertEqual(order.items[0]["price"], "22.90")
 
         routing_key, body = self.published_payload()
         self.assertEqual(routing_key, "order.created")
         self.assertEqual(body["order_id"], str(order.id))
-        self.assertEqual(body["items"], payload["items"])
+        self.assertEqual(body["restaurant"], "Burguer House")
         self.assertEqual(body["address"], payload["address"])
         self.assertEqual(body["status"], "created")
 
     def test_create_order_requires_non_empty_items(self):
-        payload = {"items": [], "address": "Rua das Flores, 42"}
+        payload = {"restaurant": str(self.restaurant.id), "items": [], "address": "Rua das Flores, 42"}
         response = self.client.post(reverse("order-list"), payload, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -63,22 +100,48 @@ class OrderCreateTests(BrokerMockMixin, APITestCase):
     def test_create_order_rolled_back_when_broker_unavailable(self):
         self.mock_channel.basic_publish.side_effect = pika.exceptions.AMQPConnectionError()
 
-        payload = {"items": ["X-Burguer"], "address": "Rua das Flores, 42"}
+        payload = {
+            "restaurant": str(self.restaurant.id),
+            "items": [{"menu_item_id": str(self.menu_item_burger.id), "quantity": 1}],
+            "address": "Rua das Flores, 42",
+        }
         response = self.client.post(reverse("order-list"), payload, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_503_SERVICE_UNAVAILABLE)
+        self.assertEqual(Order.objects.count(), 0)
+
+    def test_create_order_rejects_unknown_menu_item_id(self):
+        payload = {
+            "restaurant": str(self.restaurant.id),
+            "items": [{"menu_item_id": str(uuid.uuid4()), "quantity": 1}],
+            "address": "Rua das Flores, 42",
+        }
+        response = self.client.post(reverse("order-list"), payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Order.objects.count(), 0)
+
+    def test_create_order_rejects_menu_item_from_other_restaurant(self):
+        other_restaurant = Restaurant.objects.create(name="Pizzaria Bella Napoli")
+        other_item = MenuItem.objects.create(
+            restaurant=other_restaurant, name="Pizza Margherita", price=Decimal("45.00")
+        )
+
+        payload = {
+            "restaurant": str(self.restaurant.id),
+            "items": [{"menu_item_id": str(other_item.id), "quantity": 1}],
+            "address": "Rua das Flores, 42",
+        }
+        response = self.client.post(reverse("order-list"), payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Order.objects.count(), 0)
 
 
 class OrderRetrieveTests(BrokerMockMixin, APITestCase):
     def setUp(self):
         super().setUp()
-        self.order = Order.objects.create(
-            items=["Pizza"],
-            address="Rua A, 1",
-            status="created",
-            status_message=Order.STATUS_MESSAGES["created"],
-        )
+        self.order = self.make_order()
 
     def test_list_orders(self):
         response = self.client.get(reverse("order-list"))
@@ -93,17 +156,30 @@ class OrderRetrieveTests(BrokerMockMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["status"], "created")
         self.assertEqual(response.data["status_message"], "Pedido recebido")
+        self.assertEqual(response.data["restaurant_name"], "Burguer House")
+
+    def test_filter_orders_by_restaurant(self):
+        other_restaurant = Restaurant.objects.create(name="Pizzaria Bella Napoli")
+        Order.objects.create(
+            restaurant=other_restaurant,
+            items=[{"menu_item_id": str(uuid.uuid4()), "name": "Pizza Margherita", "price": "45.00", "quantity": 1}],
+            address="Rua B, 2",
+            price=Decimal("45.00"),
+            status="created",
+            status_message=Order.STATUS_MESSAGES["created"],
+        )
+
+        response = self.client.get(reverse("order-list"), {"restaurant": str(self.restaurant.id)})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(response.data["results"][0]["id"], str(self.order.id))
 
 
 class OrderAdvanceTests(BrokerMockMixin, APITestCase):
     def setUp(self):
         super().setUp()
-        self.order = Order.objects.create(
-            items=["Pizza"],
-            address="Rua A, 1",
-            status="created",
-            status_message=Order.STATUS_MESSAGES["created"],
-        )
+        self.order = self.make_order()
 
     def advance(self):
         return self.client.post(reverse("order-advance", args=[self.order.id]))
@@ -159,9 +235,7 @@ class OrderAdvanceTests(BrokerMockMixin, APITestCase):
 class OrderConfirmDeliveryTests(BrokerMockMixin, APITestCase):
     def setUp(self):
         super().setUp()
-        self.order = Order.objects.create(
-            items=["Pizza"],
-            address="Rua A, 1",
+        self.order = self.make_order(
             status="out_for_delivery",
             status_message=Order.STATUS_MESSAGES["out_for_delivery"],
         )
@@ -192,9 +266,20 @@ class OrderConfirmDeliveryTests(BrokerMockMixin, APITestCase):
 
 class ConsumirStatusCommandTests(TestCase):
     def setUp(self):
+        restaurant = Restaurant.objects.create(name="Burguer House")
+        menu_item = MenuItem.objects.create(restaurant=restaurant, name="X-Burguer", price=Decimal("22.90"))
         self.order = Order.objects.create(
-            items=["Pizza"],
+            restaurant=restaurant,
+            items=[
+                {
+                    "menu_item_id": str(menu_item.id),
+                    "name": menu_item.name,
+                    "price": str(menu_item.price),
+                    "quantity": 1,
+                }
+            ],
             address="Rua A, 1",
+            price=menu_item.price,
             status="confirmed",
             status_message=Order.STATUS_MESSAGES["confirmed"],
         )

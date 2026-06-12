@@ -1,0 +1,45 @@
+<div class="dashboard-header">
+  <h1>{{ restaurantName || 'Painel do restaurante' }}</h1>
+  <button mat-button type="button" (click)="changeRestaurant()">Trocar restaurante</button>
+</div>
+
+@if (loading) {
+  <p>Carregando pedidos...</p>
+} @else if (orders.length === 0) {
+  <p>Nenhum pedido por aqui ainda.</p>
+} @else {
+  <div class="orders-list">
+    @for (order of orders; track order.id) {
+      <mat-card>
+        <mat-card-content>
+          <div class="order-header">
+            <span class="customer-name">{{ order.customer_name }}</span>
+            <span class="status">{{ statusMessage(order.status) }}</span>
+          </div>
+
+          <p class="address">{{ order.address }}</p>
+
+          <ul class="items-list">
+            @for (item of order.items; track item.menu_item_id) {
+              <li>{{ item.quantity }}x {{ item.name }}</li>
+            }
+          </ul>
+
+          <p class="price"><strong>Total:</strong> R$ {{ order.price }}</p>
+
+          @if (advanceLabel(order)) {
+            <button
+              mat-flat-button
+              color="primary"
+              type="button"
+              [disabled]="advancingOrderId === order.id"
+              (click)="advance(order)"
+            >
+              {{ advanceLabel(order) }}
+            </button>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+}

@@ -1,0 +1,31 @@
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.status {
+  color: #1976d2;
+}
+
+.items-list {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.price {
+  margin-bottom: 8px;
+}
+
+.order-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

@@ -1,0 +1,8 @@
+<div class="status-stepper">
+  @for (step of stepViews; track step.status) {
+    <div class="step" [class.done]="step.done" [class.active]="step.active">
+      <div class="dot"></div>
+      <span class="label">{{ step.label }}</span>
+    </div>
+  }
+</div>

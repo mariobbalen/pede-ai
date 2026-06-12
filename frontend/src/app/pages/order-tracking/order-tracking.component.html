@@ -1,0 +1,31 @@
+@if (loading) {
+  <p>Carregando pedido...</p>
+} @else if (!order) {
+  <p>Pedido não encontrado.</p>
+} @else {
+  <h1>Pedido em {{ order.restaurant_name }}</h1>
+
+  <app-status-stepper [status]="order.status"></app-status-stepper>
+
+  <p class="status-message">{{ order.status_message }}</p>
+
+  <mat-card class="order-details">
+    <mat-card-content>
+      <h3>Itens</h3>
+      <ul class="items-list">
+        @for (item of order.items; track item.menu_item_id) {
+          <li>{{ item.quantity }}x {{ item.name }} — R$ {{ item.price }}</li>
+        }
+      </ul>
+
+      <p><strong>Endereço:</strong> {{ order.address }}</p>
+      <p><strong>Total:</strong> R$ {{ order.price }}</p>
+    </mat-card-content>
+  </mat-card>
+
+  @if (order.status === 'out_for_delivery') {
+    <button mat-flat-button color="primary" type="button" [disabled]="confirming" (click)="confirmDelivery()">
+      Confirmar recebimento
+    </button>
+  }
+}

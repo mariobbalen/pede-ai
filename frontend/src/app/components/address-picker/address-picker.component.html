@@ -1,0 +1,11 @@
+<div #mapContainer class="map-container"></div>
+
+<p class="address-text">
+  @if (loadingAddress) {
+    Buscando endereço...
+  } @else {
+    {{ currentAddress || 'Carregando localização...' }}
+  }
+</p>
+
+<p class="hint">Arraste o pino no mapa para ajustar o endereço de entrega.</p>

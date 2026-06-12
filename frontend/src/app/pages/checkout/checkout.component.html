@@ -1,0 +1,27 @@
+<h1>Finalizar pedido</h1>
+
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>Seu nome</mat-label>
+  <input matInput name="customerName" [(ngModel)]="customerName" required />
+</mat-form-field>
+
+<h2>Endereço de entrega</h2>
+<app-address-picker (addressSelected)="onAddressSelected($event)"></app-address-picker>
+
+<h2>Resumo do pedido</h2>
+<app-cart-summary [items]="cart.items" [total]="cartTotal"></app-cart-summary>
+
+<button
+  mat-flat-button
+  color="primary"
+  type="button"
+  class="submit-button"
+  [disabled]="!canSubmit()"
+  (click)="submitOrder()"
+>
+  @if (submitting) {
+    Enviando...
+  } @else {
+    Confirmar pedido
+  }
+</button>

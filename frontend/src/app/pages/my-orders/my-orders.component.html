@@ -1,0 +1,46 @@
+<h1>Meus pedidos</h1>
+
+@if (loading) {
+  <p>Carregando pedidos...</p>
+} @else if (orders.length === 0) {
+  <p>
+    Você ainda não fez nenhum pedido. <a routerLink="/restaurants">Ver restaurantes</a>
+  </p>
+} @else {
+  <div class="orders-list">
+    @for (order of orders; track order.id) {
+      <mat-card>
+        <mat-card-content>
+          <div class="order-header">
+            <span class="restaurant-name">{{ order.restaurant_name }}</span>
+            <span class="status">{{ statusLabel(order) }}</span>
+          </div>
+
+          <ul class="items-list">
+            @for (item of order.items; track item.menu_item_id) {
+              <li>{{ item.quantity }}x {{ item.name }}</li>
+            }
+          </ul>
+
+          <p class="price"><strong>Total:</strong> R$ {{ order.price }}</p>
+
+          <div class="order-actions">
+            <a mat-button color="primary" [routerLink]="['/orders', order.id]">Ver detalhes</a>
+
+            @if (order.status === 'out_for_delivery') {
+              <button
+                mat-flat-button
+                color="primary"
+                type="button"
+                [disabled]="confirmingOrderId === order.id"
+                (click)="confirmDelivery(order)"
+              >
+                Confirmar recebimento
+              </button>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+}

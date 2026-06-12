@@ -20,8 +20,16 @@ class OrderViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Order.objects.all()
+    queryset = Order.objects.select_related("restaurant").all()
     serializer_class = OrdersSerializer
+
+    # filtra os pedidos por restaurante (usado pelo painel do restaurante)
+    def get_queryset(self):
+        qs = super().get_queryset()
+        restaurant_id = self.request.query_params.get("restaurant")
+        if restaurant_id:
+            qs = qs.filter(restaurant_id=restaurant_id)
+        return qs
 
     # cria o pedido
     def perform_create(self, serializer):
