@@ -2,24 +2,24 @@ import pika, json
 from config import RABBITMQ_HOST, QUEUES
 
 STATUS_ICONS = {
-    "confirmado":         "[confirmado]",
-    "preparando":         "[preparando]",
-    "aguardando_motoboy": "[aguardando_motoboy]",
-    "saiu_entrega":       "[saiu_entrega]",
-    "delivered":          "[delivered]",
+    "confirmed":        "[confirmed]",
+    "preparing":        "[preparing]",
+    "awaiting_courier": "[awaiting_courier]",
+    "out_for_delivery": "[out_for_delivery]",
+    "delivered":        "[delivered]",
 }
 
 # Lê o payload, busca o ícone correspondente e imprime o progresso do pedido.
 def receive_update(ch, method, properties, body):
     data = json.loads(body)
     icon = STATUS_ICONS.get(data["status"], "[status]")
-    print(f"{icon} [{data['pedido_id'][:8]}...] {data['mensagem']}")
+    print(f"{icon} [{data['order_id'][:8]}...] {data['message']}")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 # Callback separado para o evento de entrega
 def receive_delivery(ch, method, properties, body):
     data = json.loads(body)
-    print(f"\nPedido {data['pedido_id'][:8]}... ENTREGUE! Bom apetite!\n")
+    print(f"\nPedido {data['order_id'][:8]}... ENTREGUE! Bom apetite!\n")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 # Registra 2 callbacks em filas diferentes, e fica escutando 2 ao mesmo tempo no mesmo loop
@@ -34,7 +34,7 @@ def main():
         on_message_callback=receive_update,
     )
     ch.basic_consume(
-        queue=QUEUES["entregue"][0],
+        queue=QUEUES["delivered"][0],
         on_message_callback=receive_delivery,
     )
 

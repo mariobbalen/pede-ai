@@ -19,14 +19,14 @@ def load_orders(filepath: str) -> list:
     return data
  
 # Monta o dicionário do pedido, gera um UUID, e publica no exchange com a routing key "order.created".
-def place_order(ch, itens: list, endereco: str) -> str:
+def place_order(ch, items: list, address: str) -> str:
     order = {
-        "pedido_id": str(uuid.uuid4()),
-        "itens":     itens,
-        "endereco":  endereco,
-        "status":    "criado",
+        "order_id": str(uuid.uuid4()),
+        "items":    items,
+        "address":  address,
+        "status":   "created",
     }
- 
+
     ch.basic_publish(
         exchange=EXCHANGE_NAME,
         routing_key="order.created",
@@ -36,8 +36,8 @@ def place_order(ch, itens: list, endereco: str) -> str:
             content_type="application/json",
         ),
     )
-    print(f"Pedido enviado: {order['pedido_id']}  |  {itens}  |  {endereco}")
-    return order["pedido_id"]
+    print(f"Pedido enviado: {order['order_id']}  |  {items}  |  {address}")
+    return order["order_id"]
  
 # Abre a conexão, carrega os pedidos e itera sobre eles, chamando o place_order para cada válido.
 def main():

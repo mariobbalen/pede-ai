@@ -1,29 +1,31 @@
+# APENAS PARA TESTAR O FLUXO
+
 import pika, json, time
 from config import RABBITMQ_HOST, EXCHANGE_NAME, QUEUES
 
 STATUSES = [
-    ("order.status.confirmado",         "Pedido confirmado"),
-    ("order.status.preparando",         "Em preparacao"),
-    ("order.status.aguardando_motoboy", "Aguardando motoboy"),
-    ("order.status.saiu_entrega",       "Saiu para entrega"),
-    ("order.delivered",                 "Pedido entregue"),
+    ("order.status.confirmed",         "Pedido confirmado"),
+    ("order.status.preparing",         "Em preparacao"),
+    ("order.status.awaiting_courier",  "Aguardando motoboy"),
+    ("order.status.out_for_delivery",  "Saiu para entrega"),
+    ("order.delivered",                "Pedido entregue"),
 ]
 
 # lê o pedido na fila, simula o ciclo de vida, publicando 5 atualizações, e só da o ack no final
 def process_order(ch, method, properties, body):
     order = json.loads(body)
-    print(f"\nNovo pedido recebido: {order['pedido_id']}")
-    print(f"   Itens: {', '.join(order['itens'])}")
-    print(f"   Endereco: {order['endereco']}")
+    print(f"\nNovo pedido recebido: {order['order_id']}")
+    print(f"   Itens: {', '.join(order['items'])}")
+    print(f"   Endereco: {order['address']}")
 
     try:
         for routing_key, message in STATUSES:
             time.sleep(2)
 
             payload = {
-                "pedido_id": order["pedido_id"],
-                "status":    routing_key.split(".")[-1],
-                "mensagem":  message,
+                "order_id": order["order_id"],
+                "status":   routing_key.split(".")[-1],
+                "message":  message,
             }
             ch.basic_publish(
                 exchange=EXCHANGE_NAME,
@@ -46,7 +48,7 @@ def main():
     ch   = conn.channel()
     ch.basic_qos(prefetch_count=1)
 
-    queue = QUEUES["novos"][0]
+    queue = QUEUES["new"][0]
     ch.basic_consume(queue=queue, on_message_callback=process_order)
     print(f"Restaurante aguardando pedidos na fila [{queue}]...")
     ch.start_consuming()
