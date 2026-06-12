@@ -2,7 +2,7 @@ import pika, json, uuid, sys
 from pathlib import Path
 from config import RABBITMQ_HOST, EXCHANGE_NAME
  
- 
+# Abre o arquivo JSON e garante que o retorno sempre seja uma lista.
 def load_orders(filepath: str) -> list:
     path = Path(filepath)
     if not path.exists():
@@ -18,7 +18,7 @@ def load_orders(filepath: str) -> list:
  
     return data
  
- 
+# Monta o dicionário do pedido, gera um UUID, e publica no exchange com a routing key "order.created".
 def place_order(ch, itens: list, endereco: str) -> str:
     order = {
         "pedido_id": str(uuid.uuid4()),
@@ -39,7 +39,7 @@ def place_order(ch, itens: list, endereco: str) -> str:
     print(f"Pedido enviado: {order['pedido_id']}  |  {itens}  |  {endereco}")
     return order["pedido_id"]
  
- 
+# Abre a conexão, carrega os pedidos e itera sobre eles, chamando o place_order para cada válido.
 def main():
     filepath = sys.argv[1] if len(sys.argv) > 1 else "orders.json"
     orders = load_orders(filepath)

@@ -9,6 +9,7 @@ STATUSES = [
     ("order.delivered",                 "Pedido entregue"),
 ]
 
+# lê o pedido na fila, simula o ciclo de vida, publicando 5 atualizações, e só da o ack no final
 def process_order(ch, method, properties, body):
     order = json.loads(body)
     print(f"\nNovo pedido recebido: {order['pedido_id']}")
@@ -38,6 +39,7 @@ def process_order(ch, method, properties, body):
         print(f"Erro ao processar pedido: {e}")
         ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
 
+# define prefetch para não receber um segundo pedido antes de terminar o atual.
 def main():
     credentials = pika.PlainCredentials('admin', 'admin123')
     conn = pika.BlockingConnection(pika.ConnectionParameters(host = RABBITMQ_HOST, credentials=credentials))
