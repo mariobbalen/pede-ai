@@ -2,7 +2,7 @@ import pika
 from config import *
 
 def setup():
-    credentials = pika.PlainCredentials('admin', 'admin123')
+    credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASSWORD)
     conn = pika.BlockingConnection(pika.ConnectionParameters(host = RABBITMQ_HOST, credentials=credentials))
     ch   = conn.channel()
 

@@ -5,7 +5,7 @@
     "fields": {
       "name": "Burguer House",
       "description": "Hamburgueres artesanais e batatas fritas",
-      "address": "Av. Paulista, 1000 - Sao Paulo, SP",
+      "address": "Av. Brasil, 1200 - Centro, Passo Fundo, RS",
       "is_active": true,
       "created_at": "2026-06-01T12:00:00Z",
       "updated_at": "2026-06-01T12:00:00Z"
@@ -82,7 +82,7 @@
     "fields": {
       "name": "Pizzaria Bella Napoli",
       "description": "Pizzas no forno a lenha, massa fina e ingredientes frescos",
-      "address": "Rua Augusta, 500 - Sao Paulo, SP",
+      "address": "Rua Teixeira Soares, 850 - Centro, Passo Fundo, RS",
       "is_active": true,
       "created_at": "2026-06-01T12:00:00Z",
       "updated_at": "2026-06-01T12:00:00Z"
@@ -159,7 +159,7 @@
     "fields": {
       "name": "Sushi Kazoku",
       "description": "Culinaria japonesa, combinados e pratos quentes",
-      "address": "Rua Liberdade, 200 - Sao Paulo, SP",
+      "address": "Av. Presidente Vargas, 1450 - Petropolis, Passo Fundo, RS",
       "is_active": true,
       "created_at": "2026-06-01T12:00:00Z",
       "updated_at": "2026-06-01T12:00:00Z"

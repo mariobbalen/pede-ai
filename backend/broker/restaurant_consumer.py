@@ -1,7 +1,7 @@
 # APENAS PARA TESTAR O FLUXO
 
 import pika, json, time
-from config import RABBITMQ_HOST, EXCHANGE_NAME, QUEUES
+from config import RABBITMQ_HOST, RABBITMQ_USER, RABBITMQ_PASSWORD, EXCHANGE_NAME, QUEUES
 
 STATUSES = [
     ("order.status.confirmed",         "Pedido confirmado"),
@@ -44,7 +44,7 @@ def process_order(ch, method, properties, body):
 
 # define prefetch para não receber um segundo pedido antes de terminar o atual.
 def main():
-    credentials = pika.PlainCredentials('admin', 'admin123')
+    credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASSWORD)
     conn = pika.BlockingConnection(pika.ConnectionParameters(host = RABBITMQ_HOST, credentials=credentials))
     ch   = conn.channel()
     ch.basic_qos(prefetch_count=1)

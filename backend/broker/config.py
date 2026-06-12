@@ -1,4 +1,8 @@
-RABBITMQ_HOST = "localhost"
+import os
+
+RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "localhost")
+RABBITMQ_USER = os.environ.get("RABBITMQ_USER", "admin")
+RABBITMQ_PASSWORD = os.environ.get("RABBITMQ_PASSWORD", "admin123")
 EXCHANGE_NAME = "orders"
 EXCHANGE_TYPE = "topic"
 

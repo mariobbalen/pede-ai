@@ -1,6 +1,6 @@
 import pika, json, uuid, sys
 from pathlib import Path
-from config import RABBITMQ_HOST, EXCHANGE_NAME
+from config import RABBITMQ_HOST, RABBITMQ_USER, RABBITMQ_PASSWORD, EXCHANGE_NAME
  
 # Abre o arquivo JSON e garante que o retorno sempre seja uma lista.
 def load_orders(filepath: str) -> list:
@@ -44,7 +44,7 @@ def main():
     filepath = sys.argv[1] if len(sys.argv) > 1 else "orders.json"
     orders = load_orders(filepath)
  
-    credentials = pika.PlainCredentials("admin", "admin123")
+    credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASSWORD)
     conn = pika.BlockingConnection(
         pika.ConnectionParameters(host=RABBITMQ_HOST, credentials=credentials)
     )

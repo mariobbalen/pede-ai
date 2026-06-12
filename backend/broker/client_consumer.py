@@ -1,5 +1,5 @@
 import pika, json
-from config import RABBITMQ_HOST, QUEUES
+from config import RABBITMQ_HOST, RABBITMQ_USER, RABBITMQ_PASSWORD, QUEUES
 
 STATUS_ICONS = {
     "confirmed":        "[confirmed]",
@@ -24,7 +24,7 @@ def receive_delivery(ch, method, properties, body):
 
 # Registra 2 callbacks em filas diferentes, e fica escutando 2 ao mesmo tempo no mesmo loop
 def main():
-    credentials = pika.PlainCredentials('admin', 'admin123')
+    credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASSWORD)
     conn = pika.BlockingConnection(pika.ConnectionParameters(host = RABBITMQ_HOST, credentials=credentials))
     ch   = conn.channel()
     ch.basic_qos(prefetch_count=1)
