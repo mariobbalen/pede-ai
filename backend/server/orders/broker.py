@@ -48,7 +48,7 @@ def publish_status_update(order, routing_key, message):
     Payload shape ({order_id, status, message}) and routing keys
     (order.status.<status> / order.delivered) match what
     broker/restaurant_consumer.py publishes, so client_consumer.py and
-    consumir_status keep working unchanged regardless of who triggers the update.
+    consume_status keep working unchanged regardless of who triggers the update.
     """
     conn = get_connection()
     try:

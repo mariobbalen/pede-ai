@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 
 from orders.models import Order
 
+# LISTENER QUE ATUALIZA NA DB CONFORME VERIFICOU NO RABBITMQ
 
 class Command(BaseCommand):
     help = "Consume the status and delivery queues from RabbitMQ and update orders in the database."
