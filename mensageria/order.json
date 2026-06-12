@@ -1,0 +1,10 @@
+[
+  {
+    "items": ["X-Burguer", "Coca-Cola"],
+    "address": "Rua das Flores, 42",
+    "name": "Mario",
+    "restaurant": "McDonald's",
+    "price": 30.00,
+    "status": "pronto"
+    }
+]

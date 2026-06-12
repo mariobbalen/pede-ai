@@ -51,3 +51,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# pega uma lista de 5 atualizações, e para cada uma, ele espera 2 segundos para simular o tempo necessário. Logo, ele monta um payload e entrega para a central de distribuição. 

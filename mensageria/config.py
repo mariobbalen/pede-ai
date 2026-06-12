@@ -10,3 +10,5 @@ QUEUES = {
 
 DLX_EXCHANGE = "orders.dlx"
 DLX_QUEUE    = "pedidos_mortos"
+
+# onde ficam as constantes compartilhadas

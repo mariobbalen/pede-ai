@@ -28,3 +28,5 @@ def setup():
 
 if __name__ == "__main__":
     setup()
+
+# Declara o DXL, o exchange principal, abre a conexão (precisa ser rodado antes de qualquer coisa, se não rodar, as filas e as exchanges não existem e os scripts falham.)

@@ -40,3 +40,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Acompanha duas filas, o de atualização e o entregue, cada um com seu próprio callback.
