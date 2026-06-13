@@ -78,7 +78,7 @@ class OrderViewSet(
     # user confirma que recebeu o pedido
     @action(detail=True, methods=["post"], url_path="confirm-delivery")
     def confirm_delivery(self, request, pk=None):
-        """Mark the order as delivered (client side), once it's out for delivery."""
+        """Marca o pedido como entregue (pelo cliente), uma vez que esteja saindo para entrega."""
         order = self.get_object()
         if order.status != "out_for_delivery":
             return Response(

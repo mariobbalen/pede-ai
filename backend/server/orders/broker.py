@@ -12,10 +12,10 @@ def get_connection():
 
 
 def publish_order_created(order):
-    """Publish the order to the 'orders' exchange with routing key 'order.created'.
+    """Publica o pedido no exchange 'orders' com a routing key 'order.created'.
 
-    Payload keys (order_id/items/address) match the wire format expected by
-    broker/restaurant_consumer.py and must not be renamed.
+    As chaves do payload (order_id/items/address) seguem o formato esperado por
+    broker/restaurant_consumer.py e não devem ser renomeadas.
     """
     conn = get_connection()
     try:
@@ -43,12 +43,13 @@ def publish_order_created(order):
 
 
 def publish_status_update(order, routing_key, message):
-    """Publish a status update for `order` to the 'orders' exchange.
+    """Publica uma atualização de status de `order` no exchange 'orders'.
 
-    Payload shape ({order_id, status, message}) and routing keys
-    (order.status.<status> / order.delivered) match what
-    broker/restaurant_consumer.py publishes, so client_consumer.py and
-    consume_status keep working unchanged regardless of who triggers the update.
+    O formato do payload ({order_id, status, message}) e as routing keys
+    (order.status.<status> / order.delivered) seguem o que
+    broker/restaurant_consumer.py publica, para que client_consumer.py e
+    consume_status continuem funcionando sem mudanças, independente de quem
+    disparou a atualização.
     """
     conn = get_connection()
     try:

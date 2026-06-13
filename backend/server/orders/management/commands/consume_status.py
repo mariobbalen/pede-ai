@@ -9,7 +9,7 @@ from orders.models import Order
 # LISTENER QUE ATUALIZA NA DB CONFORME VERIFICOU NO RABBITMQ
 
 class Command(BaseCommand):
-    help = "Consume the status and delivery queues from RabbitMQ and update orders in the database."
+    help = "Consome as filas de status e entrega do RabbitMQ e atualiza os pedidos no banco de dados."
 
     def handle(self, *args, **options):
         credentials = pika.PlainCredentials(settings.RABBITMQ_USER, settings.RABBITMQ_PASSWORD)

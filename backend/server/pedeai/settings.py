@@ -13,23 +13,23 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Caminhos dentro do projeto seguem este padrão: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+# Configurações iniciais de desenvolvimento - não usar em produção
+# Veja https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# AVISO DE SEGURANÇA: mantenha em segredo a chave usada em produção!
 SECRET_KEY = 'django-insecure-rcjq7baxsgaq37!q4prcvn-zsdefertigdmaiz&wain^msb9yz'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# AVISO DE SEGURANÇA: não rode com o debug ativado em produção!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
 
-# Application definition
+# Definição das aplicações
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -75,7 +75,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'pedeai.wsgi.application'
 
 
-# Database
+# Banco de dados
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
@@ -86,7 +86,7 @@ DATABASES = {
 }
 
 
-# Password validation
+# Validação de senha
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -105,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
+# Internacionalização
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
 LANGUAGE_CODE = 'pt-br'
@@ -117,13 +117,13 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Arquivos estáticos (CSS, JavaScript, Imagens)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
 
 
-# Default primary key field type
+# Tipo padrão de campo de chave primária
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -139,7 +139,7 @@ REST_FRAMEWORK = {
 }
 
 
-# CORS (allows the Angular dev server to call the API)
+# CORS (permite que o servidor de desenvolvimento do Angular chame a API)
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',

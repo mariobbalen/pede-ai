@@ -17,7 +17,7 @@ from .models import Order
 # TESTES GERADOS POR IA
 
 class BrokerMockMixin:
-    """Replace the real RabbitMQ connection with a mock so tests don't need a broker running."""
+    """Substitui a conexão real do RabbitMQ por um mock, para que os testes não precisem de um broker rodando."""
 
     def setUp(self):
         super().setUp()

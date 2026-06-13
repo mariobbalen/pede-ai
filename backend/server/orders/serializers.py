@@ -6,11 +6,11 @@ from restaurants.models import MenuItem
 
 from .models import Order
 
-# MODEL -> JSON
+# MODELO -> JSON
 
 
 class OrderItemInputSerializer(serializers.Serializer):
-    """Validates the shape of each incoming item before resolving it against the menu."""
+    """Valida o formato de cada item recebido antes de resolvê-lo contra o cardápio."""
 
     menu_item_id = serializers.UUIDField()
     quantity = serializers.IntegerField(min_value=1)
