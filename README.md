@@ -8,7 +8,7 @@ Sistema de gerenciamento de pedidos com arquitetura baseada em mensageria usando
 
 ## O que é
 
-O Pede Aí é uma aplicação que conecta clientes e restaurantes através de um sistema robusto de processamento de pedidos. Utiliza filas de mensagens para garantir comunicação assíncrona entre componentes, com tratamento de erros e atualização de status em tempo real.
+O Pede Aí é uma aplicação que conecta clientes e restaurantes através de um sistema de processamento de pedidos baseado no IFood. Utiliza filas de mensagens para garantir comunicação assíncrona entre componentes, com tratamento de erros e atualização de status em tempo real.
 
 ## Arquitetura
 
@@ -37,11 +37,28 @@ Frontend (Angular) -> API Django -> RabbitMQ -> Consumidores -> Banco de Dados
 - Node.js 18+
 - Docker e Docker Compose
 
+## Como Executar (Docker)
+
+Para rodar a aplicação completa sem precisar instalar Python, Node.js ou dependências, basta usar o Docker Compose na raiz do projeto:
+
+```bash
+git clone https://github.com/mariobbalen/pede-ai
+cd pede-ai
+docker-compose up -d --build
+```
+
+Isso vai construir e iniciar todos os serviços (RabbitMQ, backend, consumidor de status e frontend).
+
+Para parar a aplicação:
+```bash
+docker-compose down
+```
+
 ## Como Executar (Dev)
 
 ### 1. Clonar o Repositório
 ```bash
-git clone <seu-repositorio>
+git clone https://github.com/mariobbalen/pede-ai
 cd pede-ai
 ```
 
