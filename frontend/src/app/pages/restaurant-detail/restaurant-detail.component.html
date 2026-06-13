@@ -40,7 +40,14 @@
 
   @if ((cart$ | async)?.items?.length) {
     <div class="cart-footer">
-      <app-cart-summary [items]="(cart$ | async)?.items ?? []" [total]="(total$ | async) ?? 0"></app-cart-summary>
+      <app-cart-summary
+        [items]="(cart$ | async)?.items ?? []"
+        [total]="(total$ | async) ?? 0"
+        [editable]="true"
+        (increase)="onCartIncrease($event)"
+        (decrease)="onCartDecrease($event)"
+        (remove)="onCartRemove($event)"
+      ></app-cart-summary>
       <button mat-flat-button color="primary" type="button" (click)="goToCheckout()">Ir para checkout</button>
     </div>
   }

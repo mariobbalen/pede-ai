@@ -1,11 +1,54 @@
-<div #mapContainer class="map-container"></div>
+<div class="address-picker">
+  <div class="search-row">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar endereço</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Digite uma rua, bairro ou cidade"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchInput()"
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
 
-<p class="address-text">
-  @if (loadingAddress) {
-    Buscando endereço...
-  } @else {
-    {{ currentAddress || 'Carregando localização...' }}
+    <button
+      mat-icon-button
+      type="button"
+      class="locate-button"
+      matTooltip="Usar minha localização"
+      [disabled]="locating"
+      (click)="useCurrentLocation()"
+    >
+      @if (locating) {
+        <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+        <mat-icon>my_location</mat-icon>
+      }
+    </button>
+  </div>
+
+  @if (suggestions.length > 0) {
+    <ul class="suggestions">
+      @for (suggestion of suggestions; track suggestion.lat + suggestion.lon) {
+        <li (click)="selectSuggestion(suggestion)">
+          <mat-icon>place</mat-icon>
+          <span>{{ suggestion.display_name }}</span>
+        </li>
+      }
+    </ul>
   }
-</p>
 
-<p class="hint">Arraste o pino no mapa para ajustar o endereço de entrega.</p>
+  <div #mapContainer class="map-container"></div>
+
+  <p class="address-text">
+    <mat-icon>location_on</mat-icon>
+    @if (loadingAddress) {
+      <span>Buscando endereço...</span>
+    } @else {
+      <span>{{ currentAddress || 'Carregando localização...' }}</span>
+    }
+  </p>
+
+  <p class="hint">Arraste o pino, busque um endereço ou use sua localização atual para ajustar o ponto de entrega.</p>
+</div>

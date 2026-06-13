@@ -1,15 +1,44 @@
 <h1>Finalizar pedido</h1>
 
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>Seu nome</mat-label>
-  <input matInput name="customerName" [(ngModel)]="customerName" required />
-</mat-form-field>
+<mat-card class="section">
+  <mat-card-content>
+    <h2>
+      <mat-icon>person</mat-icon>
+      Seus dados
+    </h2>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Seu nome</mat-label>
+      <input matInput name="customerName" [(ngModel)]="customerName" required />
+    </mat-form-field>
+  </mat-card-content>
+</mat-card>
 
-<h2>Endereço de entrega</h2>
-<app-address-picker (addressSelected)="onAddressSelected($event)"></app-address-picker>
+<mat-card class="section">
+  <mat-card-content>
+    <h2>
+      <mat-icon>location_on</mat-icon>
+      Endereço de entrega
+    </h2>
+    <app-address-picker (addressSelected)="onAddressSelected($event)"></app-address-picker>
+  </mat-card-content>
+</mat-card>
 
-<h2>Resumo do pedido</h2>
-<app-cart-summary [items]="cart.items" [total]="cartTotal"></app-cart-summary>
+<mat-card class="section">
+  <mat-card-content>
+    <h2>
+      <mat-icon>receipt_long</mat-icon>
+      Resumo do pedido
+    </h2>
+    <app-cart-summary
+      [items]="cart.items"
+      [total]="cartTotal"
+      [editable]="true"
+      (increase)="onIncrease($event)"
+      (decrease)="onDecrease($event)"
+      (remove)="onRemove($event)"
+    ></app-cart-summary>
+  </mat-card-content>
+</mat-card>
 
 <button
   mat-flat-button

@@ -18,7 +18,7 @@ interface StepView {
 export class StatusStepperComponent {
   @Input() status: OrderStatus = 'created';
 
-  // Full flow including the terminal "delivered" step.
+  // Sequência completa, incluindo a etapa final "entregue".
   private readonly steps: OrderStatus[] = [...STATUS_FLOW, 'delivered'];
 
   get stepViews(): StepView[] {

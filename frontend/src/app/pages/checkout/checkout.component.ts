@@ -5,9 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { CartService } from '../../services/cart.service';
+import { CartLineItem, CartService } from '../../services/cart.service';
 import { IdentityService } from '../../services/identity.service';
 import { OrderService } from '../../services/order.service';
 import { CartSummaryComponent } from '../../components/cart-summary/cart-summary.component';
@@ -22,6 +24,8 @@ import { CreateOrderPayload } from '../../models/order.model';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatCardModule,
+    MatIconModule,
     CartSummaryComponent,
     AddressPickerComponent,
   ],
@@ -59,6 +63,21 @@ export class CheckoutComponent implements OnInit {
 
   onAddressSelected(address: SelectedAddress): void {
     this.selectedAddress = address;
+  }
+
+  onIncrease(item: CartLineItem): void {
+    this.cartService.updateQuantity(item.menu_item_id, item.quantity + 1);
+  }
+
+  onDecrease(item: CartLineItem): void {
+    this.cartService.updateQuantity(item.menu_item_id, item.quantity - 1);
+  }
+
+  onRemove(item: CartLineItem): void {
+    this.cartService.removeItem(item.menu_item_id);
+    if (this.cart.items.length === 0) {
+      this.router.navigate(['/restaurants']);
+    }
   }
 
   canSubmit(): boolean {

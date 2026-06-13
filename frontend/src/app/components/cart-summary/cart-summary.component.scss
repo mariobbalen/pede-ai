@@ -19,6 +19,13 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 4px 0;
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
 
   .info {
     display: flex;
@@ -40,6 +47,10 @@
     display: flex;
     align-items: center;
     gap: 4px;
+
+    button {
+      transition: color 0.15s ease;
+    }
   }
 
   .quantity {

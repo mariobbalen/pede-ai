@@ -6,7 +6,7 @@ from restaurants.models import Restaurant
 
 
 class Order(models.Model):
-    # Values must match the status strings published by broker/restaurant_consumer.py
+    # Os valores devem corresponder aos status publicados por broker/restaurant_consumer.py
     STATUS_CHOICES = [
         ("created", "Created"),
         ("confirmed", "Confirmed"),
@@ -16,11 +16,11 @@ class Order(models.Model):
         ("delivered", "Delivered"),
     ]
 
-    # Order the restaurant moves through via the "advance" action.
+    # Sequencia que o restaurante percorre atraves da acao "avancar".
     STATUS_FLOW = ["created", "confirmed", "preparing", "awaiting_courier", "out_for_delivery"]
 
-    # Messages match the ones used by broker/restaurant_consumer.py so
-    # client_consumer.py shows the same text regardless of who published the update.
+    # As mensagens seguem as mesmas usadas em broker/restaurant_consumer.py para que
+    # client_consumer.py mostre o mesmo texto independente de quem publicou a atualizacao.
     STATUS_MESSAGES = {
         "created": "Pedido recebido",
         "confirmed": "Pedido confirmado",

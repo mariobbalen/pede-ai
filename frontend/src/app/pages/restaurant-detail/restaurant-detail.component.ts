@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { map } from 'rxjs';
 
 import { RestaurantService } from '../../services/restaurant.service';
-import { CartService } from '../../services/cart.service';
+import { CartLineItem, CartService } from '../../services/cart.service';
 import { RestaurantDetail, MenuItem } from '../../models/restaurant.model';
 import { CartSummaryComponent } from '../../components/cart-summary/cart-summary.component';
 import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
@@ -93,5 +93,17 @@ export class RestaurantDetailComponent implements OnInit {
 
   goToCheckout(): void {
     this.router.navigate(['/checkout']);
+  }
+
+  onCartIncrease(item: CartLineItem): void {
+    this.cartService.updateQuantity(item.menu_item_id, item.quantity + 1);
+  }
+
+  onCartDecrease(item: CartLineItem): void {
+    this.cartService.updateQuantity(item.menu_item_id, item.quantity - 1);
+  }
+
+  onCartRemove(item: CartLineItem): void {
+    this.cartService.removeItem(item.menu_item_id);
   }
 }

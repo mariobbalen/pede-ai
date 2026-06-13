@@ -41,7 +41,7 @@ export interface CreateOrderPayload {
   customer_name: string;
 }
 
-// Mirrors Order.STATUS_FLOW in backend/server/orders/models.py
+// Reflete Order.STATUS_FLOW em backend/server/orders/models.py
 export const STATUS_FLOW: OrderStatus[] = [
   'created',
   'confirmed',
@@ -50,7 +50,7 @@ export const STATUS_FLOW: OrderStatus[] = [
   'out_for_delivery',
 ];
 
-// Mirrors Order.STATUS_MESSAGES in backend/server/orders/models.py (pt-BR, shown to users)
+// Reflete Order.STATUS_MESSAGES em backend/server/orders/models.py (pt-BR, exibido ao usuário)
 export const STATUS_MESSAGES: Record<OrderStatus, string> = {
   created: 'Pedido recebido',
   confirmed: 'Pedido confirmado',
@@ -60,7 +60,7 @@ export const STATUS_MESSAGES: Record<OrderStatus, string> = {
   delivered: 'Pedido entregue',
 };
 
-// Label shown on the restaurant dashboard's "advance" button, keyed by the status it moves the order to.
+// Texto exibido no botão "avançar" do painel do restaurante, indexado pelo status para o qual o pedido avança.
 export const ADVANCE_BUTTON_LABELS: Partial<Record<OrderStatus, string>> = {
   confirmed: 'Confirmar pedido',
   preparing: 'Iniciar preparo',
